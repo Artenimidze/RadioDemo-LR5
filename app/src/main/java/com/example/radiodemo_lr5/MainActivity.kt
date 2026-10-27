@@ -76,7 +76,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
                 value = sum,
                 onValueChange = {
                     sum = it
-                    result = handle_change(sum.toInt(), n.toInt(), tip, discount)
+                    result = handle_change(sum.toIntOrNull(), n.toIntOrNull(), tip, discount)
                 },
                 singleLine = true
             )
@@ -90,7 +90,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
                 value = n,
                 onValueChange = {
                     n = it
-                    result = handle_change(sum.toInt(), n.toInt(), tip, discount)
+                    result = handle_change(sum.toIntOrNull(), n.toIntOrNull(), tip, discount)
                     var r = n.toIntOrNull()
                     if (r == null) { r = 1}
                     if (r < 3) {
@@ -119,7 +119,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
                 value = tip,
                 onValueChange = {
                     tip = it
-                    result = handle_change(sum.toInt(), n.toInt(), tip, discount)
+                    result = handle_change(sum.toIntOrNull(), n.toIntOrNull(), tip, discount)
                 },
                 valueRange = 0f..25f,
                 steps = 25
