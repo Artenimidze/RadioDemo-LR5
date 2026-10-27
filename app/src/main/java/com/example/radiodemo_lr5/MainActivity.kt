@@ -44,8 +44,18 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+fun handle_change(sum: Int?, n: Int?, tip: Float, discount: Float): Float? {
+    return if (sum != null && n != null) {
+        ((sum * n).toFloat() + ((sum * n).toFloat() * (tip/100))) * (1f - discount)
+    } else {
+        null
+    }
+}
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
+    var result by remember { mutableStateOf<Float?>(null) }
+    var discount by remember {mutableFloatStateOf(0.03f)}
     var radioSelected by remember { mutableIntStateOf(1) }
     var sum by remember { mutableStateOf("") }
     var n by remember { mutableStateOf("") }
@@ -66,6 +76,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
                 value = sum,
                 onValueChange = {
                     sum = it
+                    result = handle_change(sum.toInt(), n.toInt(), tip, discount)
                 },
                 singleLine = true
             )
@@ -79,16 +90,21 @@ fun MainScreen(modifier: Modifier = Modifier) {
                 value = n,
                 onValueChange = {
                     n = it
+                    result = handle_change(sum.toInt(), n.toInt(), tip, discount)
                     var r = n.toIntOrNull()
                     if (r == null) { r = 1}
-                    radioSelected = if (r < 3) {
-                        1
+                    if (r < 3) {
+                        radioSelected = 1
+                        discount = 0.03f
                     } else if (r < 6) {
-                        2
+                        radioSelected = 2
+                        discount = 0.05f
                     } else if (r < 11) {
-                        3
+                        radioSelected = 3
+                        discount = 0.07f
                     } else {
-                        4
+                        radioSelected = 4
+                        discount = 0.1f
                     }
                 },
                 singleLine = true
@@ -103,6 +119,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
                 value = tip,
                 onValueChange = {
                     tip = it
+                    result = handle_change(sum.toInt(), n.toInt(), tip, discount)
                 },
                 valueRange = 0f..25f,
                 steps = 25
@@ -161,6 +178,9 @@ fun MainScreen(modifier: Modifier = Modifier) {
                     Text("10%")
                 }
             }
+        }
+        result?.let { r ->
+            Text ("Итоговая сумма: ${"%.2f".format(r)}")
         }
     }
 }
